@@ -1,0 +1,87 @@
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+  background-color: rgb(219, 130, 165);
+}
+
+ol, ul {
+  padding-left: 30px;
+}
+.board {
+  background-color: rgb(2, 236, 217);
+  margin-left: 50vh;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.status {
+  font-size: 5vh;
+  margin-bottom: 10px;
+}
+
+.square {
+  background: rgb(2, 236, 217);;
+  border: 1vh solid rgb(3, 35, 54);
+  float: left;
+  font-size: 20vh;
+  font-weight: bold;
+  line-height: 100px;
+  height: 30vh;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 30vh;
+}
+
+.square.highlighted {
+  background: rgb(45, 250, 154);
+}
+
+.square:focus {
+  outline: none;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.players div {
+  font-size: 5vh;
+  font-weight: bold;
+  width: 10vh;
+  text-align: center;
+  display: inline-block;
+  border: 1px solid purple;
+  margin: 1vh 2.5vh;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info {
+  margin-left: 20px;
+}
+
+.game-info button {
+  width: 30vh;
+  font-size: 3vh;
+  background-color: rgb(124, 10, 134);
+  color: white;
+  border: none;
+  padding: 1vh 5vh;
+}
+
+.selected-step {
+  font-weight: bold;
+}
+
+.selected-step button {
+  font-weight: bold;
+}
