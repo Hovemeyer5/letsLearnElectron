@@ -90,7 +90,7 @@ class Game extends React.Component {
         'Go to move #' + move + " - " + player + " at (" + getColumn(step.location) + ", " + getRow(step.location) + ")" :
         'Go to game start';
       return (
-        <li key={move}>
+        <li key={move} className={move === this.state.stepNumber ? "selected-step" : ""}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );

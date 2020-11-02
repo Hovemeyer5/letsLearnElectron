@@ -48,3 +48,11 @@ ol, ul {
 .game-info {
   margin-left: 20px;
 }
+
+.selected-step {
+  font-weight: bold;
+}
+
+.selected-step button {
+  font-weight: bold;
+}
