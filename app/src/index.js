@@ -55,6 +55,7 @@ class Game extends React.Component {
       }],
       xIsNext: true,
       stepNumber: 0,
+      isHistoryAsc: true
     };
   }
 
@@ -83,15 +84,23 @@ class Game extends React.Component {
     });
   }
 
+  toggleOrder() {
+    this.setState({
+      isHistoryAsc: !this.state.isHistoryAsc
+    });
+  }
+
   render() {
-    const history = this.state.history;
+    const history = this.state.history.slice();
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    const moves = history.map((step, move) => {
-      const player = (move % 2) === 0 ? 'X' : 'O';
+    const moves = history.map((step, index) => {
+      const move = this.state.isHistoryAsc ? index : history.length - 1 - index;
+      const board = history[move];
+      const player = (move % 2) === 0 ? 'O' : 'X';
       const desc = move ?
-        'Go to move #' + move + " - " + player + " at (" + getColumn(step.location) + ", " + getRow(step.location) + ")" :
+        'Go to move #' + move + " - " + player + " at (" + getColumn(board.location) + ", " + getRow(board.location) + ")" :
         'Go to game start';
       return (
         <li key={move} className={move === this.state.stepNumber ? "selected-step" : ""}>
@@ -117,6 +126,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
+          <button onClick={() => this.toggleOrder()}> Toggle Order </button>
           <ol>{moves}</ol>
         </div>
       </div>
@@ -160,11 +170,11 @@ function getColumn(square) {
     return 2;
   }
 
-  if([2, 5,8].includes(square)){
+  if([2,5,8].includes(square)){
     return 3;
   }
 }
 
 function getRow(square) {
-  return (square % 3) + 1;
+  return Math.round(square / 3);
 }
