@@ -61,18 +61,15 @@ class Game extends React.Component {
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
-    squares[i] = this.getPlayer();
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
       history: history.concat([{
         squares: squares,
+        location: i
       }]),
       xIsNext: !this.state.xIsNext,
-      stepNumber: this.state.stepNumber + 1,
+      stepNumber: history.length,
     });
-  }
-
-  getPlayer() {
-    return this.state.xIsNext ? 'X' : 'O';
   }
 
   jumpTo(step) {
@@ -88,8 +85,9 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
+      const player = (move % 2) === 0 ? 'X' : 'O';
       const desc = move ?
-        'Go to move #' + move :
+        'Go to move #' + move + " - " + player + " at (" + getColumn(step.location) + ", " + getRow(step.location) + ")" :
         'Go to game start';
       return (
         <li key={move}>
@@ -102,7 +100,7 @@ class Game extends React.Component {
     if (winner) {
       status = 'Winner: ' + winner;
     } else {
-      status = 'Next player: ' + (this.getPlayer());
+      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
 
     return (
@@ -147,4 +145,22 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function getColumn(square) {
+  if([0,3,6].includes(square)){
+    return 1;
+  }
+
+  if([1,4,7].includes(square)){
+    return 2;
+  }
+
+  if([2, 5,8].includes(square)){
+    return 3;
+  }
+}
+
+function getRow(square) {
+  return (square % 3) + 1;
 }
