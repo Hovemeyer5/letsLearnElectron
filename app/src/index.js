@@ -4,9 +4,11 @@ import './index.css';
 
 function Square(props) {
   return (
-    <button className={props.highlighted ? "square highlighted" : "square"} onClick={props.onClick}>
-      {props.value}
-    </button>
+    <button className={props.highlighted ? "square highlighted" : "square"}
+      onClick={props.onClick}
+      style={{color: props.color}}>
+        { props.value }
+    </button >
   );
 }
 
@@ -16,6 +18,7 @@ class Board extends React.Component {
     return <Square
       highlighted={this.props.squares[i].isHighlighted}
       value={this.props.squares[i].value}
+      color={this.props.squares[i].color}
       onClick={() => this.props.onClick(i)}
     />;
   }
@@ -40,7 +43,7 @@ class Board extends React.Component {
     });
 
     return (
-      <div>
+      <div className="board">
         {rows}
       </div>
     );
@@ -52,12 +55,27 @@ class Game extends React.Component {
     super(props);
     this.state = {
       history: [{
-        squares: Array(9).fill({value: null, isHighlighted: false}),
+        squares: Array(9).fill({value: null, isHighlighted: false, color: "black"}),
       }],
       xIsNext: true,
       stepNumber: 0,
-      isHistoryAsc: true
+      isHistoryAsc: true,
+      xColor: getRandomColor(),
+      oColor: getRandomColor()
     };
+  }
+
+  restart() {
+    this.setState({
+      history: [{
+        squares: Array(9).fill({ value: null, isHighlighted: false, color: "black" }),
+      }],
+      xIsNext: true,
+      stepNumber: 0,
+      isHistoryAsc: true,
+      xColor: getRandomColor(),
+      oColor: getRandomColor()
+    });
   }
 
   handleClick(i) {
@@ -70,7 +88,8 @@ class Game extends React.Component {
     }
     squares[i] = {
       value: this.state.xIsNext ? 'X' : 'O',
-      highlighted: false
+      highlighted: false,
+      color: this.state.xIsNext ? this.state.xColor : this.state.oColor
     };
 
     const winningSquares = calculateWinner(squares)
@@ -78,7 +97,8 @@ class Game extends React.Component {
       winningSquares.forEach(ws => {
         squares[ws] = {
           value: squares[ws].value,
-          isHighlighted: true
+          isHighlighted: true,
+          color: squares[ws].color
         }
       });
     }
@@ -120,7 +140,7 @@ class Game extends React.Component {
         'Go to game start';
       return (
         <li key={move} className={move === this.state.stepNumber ? "selected-step" : ""}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <a  onClick={() => this.jumpTo(move)}>{desc}</a>
         </li>
       );
     });
@@ -143,9 +163,14 @@ class Game extends React.Component {
           />
         </div>
         <div className="game-info">
-          <div>{status}</div>
-          <button onClick={() => this.toggleOrder()}> Toggle Order </button>
+          <div className="status">{status}</div>
+          <div className="players">
+            <div style={{color: this.state.xColor}} onClick={() => this.setState({xColor: getRandomColor()})}> X </div>
+            <div style={{color: this.state.oColor}} onClick={() => this.setState({oColor: getRandomColor()})}> O </div>
+          </div>
+          <button onClick={() => this.restart()}> Restart Game </button>
           <ol>{moves}</ol>
+          <button onClick={() => this.toggleOrder()}> Toggle Order </button>
         </div>
       </div>
     );
@@ -199,4 +224,10 @@ function getRow(square) {
 
 function allFull(squares) {
   return !squares.find(s => s.value === null);
+}
+
+function getRandomColor() {
+  const colorChoices = ["rgb(116, 9, 75)", "rgb(235, 6, 147)","rgb(16, 9, 116)", "rgb(83, 7, 99)"];
+  const index = Math.floor(Math.random() * colorChoices.length);
+  return colorChoices[index];
 }
